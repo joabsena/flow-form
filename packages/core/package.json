@@ -13,18 +13,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@flow-form/typescript-config": "workspace:^",
     "@flow-form/eslint-config": "workspace:^",
+    "@flow-form/typescript-config": "workspace:^",
+    "eslint": "8.49.0",
     "prisma": "^6.13.0",
     "tsup": "^8.5.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.2.4",
-    "eslint": "8.49.0"
+    "vitest": "^3.2.4"
   },
   "dependencies": {
     "@prisma/client": "^6.13.0",
+    "bcryptjs": "^3.0.2",
     "dotenv": "^17.2.1",
     "fastify": "^5.4.0",
     "zod": "^4.0.14"

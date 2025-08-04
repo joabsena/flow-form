@@ -1,7 +1,14 @@
 {
   "extends": "@flow-form/typescript-config/node.json",
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "baseUrl": "./",
+    "paths": {
+      "@modules/*": ["src/modules/*"],
+      "@lib/*": ["src/lib/*"],
+      "@env/*": ["src/env/*"],
+      "@generated/*": ["src/generated/*"],
+    },
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
