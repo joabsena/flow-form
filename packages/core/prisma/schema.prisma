@@ -13,3 +13,57 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum FieldType {
+  TEXT
+  TEXTAREA
+  NUMBER
+  SELECT
+  RADIO
+  CHECKBOX
+  DATE
+  EMAIL
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String?  @unique
+  password  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  form      Form[]
+
+  @@map("users")
+}
+
+model Form {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  fields      Field[]
+
+  user_id String
+  user    User   @relation(fields: [user_id], references: [id])
+
+  @@map("forms")
+}
+
+model Field {
+  id          String    @id @default(cuid())
+  label       String
+  placeholder String?
+  type        FieldType
+  options     Json?
+  required    Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  form_id String
+  form    Form   @relation(fields: [form_id], references: [id])
+
+  @@map("fields")
+}
