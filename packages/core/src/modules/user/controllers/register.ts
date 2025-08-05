@@ -1,25 +1,33 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
-import z from 'zod'
 import { makeRegisterUseCase } from '../use-cases/factories/make-register-use-case'
 import { UserAlreadyExistsError } from '../errors/user-already-exists-error'
 
-export async function register(request: FastifyRequest, reply: FastifyReply) {
-  const registerBodySchema = z.object({
-    name: z.string(),
-    email: z.string().email(),
-    password: z.string().min(6),
-  })
+type RegisterRequestBody = {
+  name: string
+  email: string
+  password: string
+}
 
-  const { name, email, password } = registerBodySchema.parse(request.body)
+export async function register(
+  request: FastifyRequest<{
+    Body: RegisterRequestBody
+  }>,
+  reply: FastifyReply,
+) {
+  const { name, email, password } = request.body
 
   try {
     const registerUseCase = makeRegisterUseCase()
 
-    await registerUseCase.execute({
+    const { user } = await registerUseCase.execute({
       name,
       email,
       password,
     })
+
+    user.password = null
+
+    return reply.status(201).send(user)
   } catch (error) {
     if (error instanceof UserAlreadyExistsError) {
       return reply.status(409).send({
@@ -29,8 +37,4 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
 
     throw error
   }
-
-  return reply.status(201).send({
-    message: 'User registered successfully',
-  })
 }
