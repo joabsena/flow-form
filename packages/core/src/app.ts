@@ -1,8 +1,8 @@
 import fastify from 'fastify'
-import { ZodError } from 'zod'
 import { env } from '../env'
 import { usersRouter } from '@modules/user/router/router'
 import {
+  hasZodFastifySchemaValidationErrors,
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
@@ -33,11 +33,17 @@ app.register(fastifySwaggerUI, {
 
 app.register(usersRouter)
 
-app.setErrorHandler((error, _request, reply) => {
-  if (error instanceof ZodError) {
-    return reply
-      .status(400)
-      .send({ message: 'Validation error.', issue: error.format() })
+app.setErrorHandler((error, request, reply) => {
+  if (hasZodFastifySchemaValidationErrors(error)) {
+    return reply.code(400).send({
+      error: 'Response Validation Error',
+      message: "Request doesn't match the schema",
+      statusCode: 400,
+      details: {
+        issues: error.validation,
+        url: request.url,
+      },
+    })
   }
 
   if (env.NODE_ENV !== 'production') {

@@ -16,7 +16,6 @@ export async function usersRouter(app: FastifyInstance) {
           id: z.string(),
           name: z.string(),
           email: z.string().email(),
-          password: z.null(),
           createdAt: z.date(),
           updatedAt: z.date(),
         }),
