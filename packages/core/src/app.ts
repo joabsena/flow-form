@@ -3,6 +3,7 @@ import { env } from '../env'
 import { usersRouter } from '@modules/user/router/router'
 import {
   hasZodFastifySchemaValidationErrors,
+  isResponseSerializationError,
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
@@ -41,6 +42,20 @@ app.setErrorHandler((error, request, reply) => {
       statusCode: 400,
       details: {
         issues: error.validation,
+        method: request.method,
+        url: request.url,
+      },
+    })
+  }
+
+  if (isResponseSerializationError(error)) {
+    return reply.code(500).send({
+      error: 'Internal Server Error',
+      message: "Response doesn't match the schema",
+      statusCode: 500,
+      details: {
+        issues: error.cause.issues,
+        method: request.method,
         url: request.url,
       },
     })
