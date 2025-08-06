@@ -14,7 +14,7 @@ export async function register(
   try {
     const registerFormUseCase = makeRegisterFormUseCase()
 
-    const form = await registerFormUseCase.execute({
+    const { form } = await registerFormUseCase.execute({
       title,
       userId,
       description: description || null,
