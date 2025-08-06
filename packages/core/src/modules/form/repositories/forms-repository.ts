@@ -4,4 +4,5 @@ export interface FormsRepository {
   create(data: Prisma.FormCreateInput): Promise<Form>
   findById(id: string): Promise<Form | null>
   findByUserId(userId: string): Promise<Form[]>
+  deleteById(id: string): Promise<void>
 }

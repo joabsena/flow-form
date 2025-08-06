@@ -26,4 +26,10 @@ export class PrismaFormsRepository implements FormsRepository {
 
     return forms
   }
+
+  async deleteById(id: string): Promise<void> {
+    await prisma.form.delete({
+      where: { id },
+    })
+  }
 }

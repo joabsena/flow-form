@@ -4,6 +4,7 @@ import { register } from '../controllers/register'
 import z from 'zod'
 import { verifyJWT } from 'src/shared/middlewares/verify-jwt'
 import { SwaggerTags } from 'src/shared/types/swagger-tags'
+import { deleteForm } from '../controllers/delete'
 
 export const formsRouter = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post('/forms', {
@@ -17,5 +18,16 @@ export const formsRouter = (app: FastifyInstance) => {
     },
     preHandler: [verifyJWT],
     handler: register,
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().delete('/forms/:formId', {
+    schema: {
+      tags: [SwaggerTags.FORMS],
+      params: z.object({
+        formId: z.string(),
+      }),
+    },
+    preHandler: [verifyJWT],
+    handler: deleteForm,
   })
 }
