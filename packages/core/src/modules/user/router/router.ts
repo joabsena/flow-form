@@ -2,10 +2,12 @@ import { FastifyInstance } from 'fastify'
 import { register } from '../controllers/register'
 import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
+import { authenticate } from '../controllers/authenticate'
 
 export async function usersRouter(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/users', {
     schema: {
+      tags: ['Authentication'],
       body: z.object({
         name: z.string(),
         email: z.string().email(),
@@ -25,5 +27,24 @@ export async function usersRouter(app: FastifyInstance) {
       },
     },
     handler: register,
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().post('/sessions', {
+    schema: {
+      tags: ['Authentication'],
+      body: z.object({
+        email: z.string().email(),
+        password: z.string().min(6),
+      }),
+      response: {
+        200: z.object({
+          token: z.string(),
+        }),
+        401: z.object({
+          message: z.string(),
+        }),
+      },
+    },
+    handler: authenticate,
   })
 }
