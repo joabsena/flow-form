@@ -1,0 +1,21 @@
+import { FastifyInstance } from 'fastify'
+import { ZodTypeProvider } from 'fastify-type-provider-zod'
+import { register } from '../controllers/register'
+import z from 'zod'
+import { verifyJWT } from 'src/shared/middlewares/verify-jwt'
+import { SwaggerTags } from 'src/shared/types/swagger-tags'
+
+export const formsRouter = (app: FastifyInstance) => {
+  app.withTypeProvider<ZodTypeProvider>().post('/forms', {
+    schema: {
+      tags: [SwaggerTags.FORMS],
+      body: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        isPublic: z.boolean().optional(),
+      }),
+    },
+    preHandler: [verifyJWT],
+    handler: register,
+  })
+}

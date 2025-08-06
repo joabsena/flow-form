@@ -1,6 +1,8 @@
 import fastify from 'fastify'
-import { env } from '../env'
-import { usersRouter } from '@modules/user/router/router'
+import fastifySwagger from '@fastify/swagger'
+import fastifySwaggerUI from '@fastify/swagger-ui'
+import fastifyJwt from '@fastify/jwt'
+import fastifyCookie from '@fastify/cookie'
 import {
   hasZodFastifySchemaValidationErrors,
   isResponseSerializationError,
@@ -8,10 +10,9 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
-import fastifySwagger from '@fastify/swagger'
-import fastifySwaggerUI from '@fastify/swagger-ui'
-import fastifyJwt from '@fastify/jwt'
-import fastifyCookie from '@fastify/cookie'
+import { formsRouter } from '@modules/form/router/router'
+import { usersRouter } from '@modules/user/router/router'
+import { env } from '../env'
 
 export const app = fastify()
 
@@ -48,6 +49,7 @@ app.register(fastifySwaggerUI, {
 })
 
 app.register(usersRouter)
+app.register(formsRouter)
 
 app.setErrorHandler((error, request, reply) => {
   if (hasZodFastifySchemaValidationErrors(error)) {
