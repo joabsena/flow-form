@@ -4,6 +4,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { authenticate } from '../controllers/authenticate'
 import { SwaggerTags } from 'src/shared/types/swagger-tags'
+import { refresh } from '../controllers/refresh'
 
 export async function usersRouter(app: FastifyInstance) {
   app.withTypeProvider<ZodTypeProvider>().post('/users', {
@@ -47,5 +48,17 @@ export async function usersRouter(app: FastifyInstance) {
       },
     },
     handler: authenticate,
+  })
+
+  app.withTypeProvider<ZodTypeProvider>().patch('/refresh', {
+    schema: {
+      tags: [SwaggerTags.AUTHENTICATION],
+      response: {
+        200: z.object({
+          token: z.string(),
+        }),
+      },
+    },
+    handler: refresh,
   })
 }
