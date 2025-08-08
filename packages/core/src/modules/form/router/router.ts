@@ -41,6 +41,7 @@ export const formsRouter = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().get('/forms', {
     schema: {
       description: 'Get all forms for the authenticated user',
+      tags: [SwaggerTags.FORMS],
     },
     preHandler: [verifyJWT],
     handler: getForms,
