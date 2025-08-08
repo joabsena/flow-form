@@ -5,10 +5,12 @@ import z from 'zod'
 import { verifyJWT } from 'src/shared/middlewares/verify-jwt'
 import { SwaggerTags } from 'src/shared/types/swagger-tags'
 import { deleteForm } from '../controllers/delete'
+import { getForms } from '../controllers/get-forms'
 
 export const formsRouter = (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post('/forms', {
     schema: {
+      description: 'Register a new form',
       tags: [SwaggerTags.FORMS],
       body: z.object({
         title: z.string(),
@@ -36,12 +38,27 @@ export const formsRouter = (app: FastifyInstance) => {
     handler: register,
   })
 
+  app.withTypeProvider<ZodTypeProvider>().get('/forms', {
+    schema: {
+      description: 'Get all forms for the authenticated user',
+    },
+    preHandler: [verifyJWT],
+    handler: getForms,
+  })
+
   app.withTypeProvider<ZodTypeProvider>().delete('/forms/:formId', {
     schema: {
+      description: 'Delete a form by ID',
       tags: [SwaggerTags.FORMS],
       params: z.object({
         formId: z.string(),
       }),
+      response: {
+        204: z.null(),
+        400: z.object({
+          message: z.string(),
+        }),
+      },
     },
     preHandler: [verifyJWT],
     handler: deleteForm,

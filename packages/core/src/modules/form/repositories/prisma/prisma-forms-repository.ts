@@ -22,6 +22,9 @@ export class PrismaFormsRepository implements FormsRepository {
       where: {
         user_id: userId,
       },
+      include: {
+        fields: true,
+      },
     })
 
     return forms

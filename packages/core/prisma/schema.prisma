@@ -63,7 +63,7 @@ model Field {
   updatedAt   DateTime  @updatedAt
 
   form_id String
-  form    Form   @relation(fields: [form_id], references: [id])
+  form    Form   @relation(fields: [form_id], references: [id], onDelete: Cascade)
 
   @@map("fields")
 }
