@@ -8,7 +8,7 @@ export async function register(
   }>,
   reply: FastifyReply,
 ) {
-  const { title, description, isPublic } = request.body
+  const { title, description, isPublic, fields } = request.body
   const userId = request.user.sub
 
   try {
@@ -19,6 +19,7 @@ export async function register(
       userId,
       description: description || null,
       isPublic: isPublic || false,
+      fields,
     })
 
     return reply.status(201).send({

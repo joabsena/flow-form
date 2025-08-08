@@ -1,20 +1,11 @@
-import { $Enums } from 'generated/prisma'
+import { Prisma } from 'generated/prisma'
 import { FormsRepository } from '../repositories/forms-repository'
-
-interface Field {
-  id?: string
-  label: string
-  placeholder?: string | null
-  type: $Enums.FieldType
-  options?: []
-  required?: boolean
-}
 
 export interface RegisterUseCaseRequest {
   title: string
   description?: string | null
   isPublic?: boolean
-  fields?: Field
+  fields: Prisma.FieldCreateInput[]
   userId?: string
 }
 
@@ -26,6 +17,9 @@ export class RegisterFormUseCase {
       title: data.title,
       description: data?.description || null,
       isPublic: data?.isPublic || false,
+      fields: {
+        create: data.fields || [],
+      },
       user: {
         connect: {
           id: data.userId,

@@ -14,6 +14,22 @@ export const formsRouter = (app: FastifyInstance) => {
         title: z.string(),
         description: z.string().optional(),
         isPublic: z.boolean().optional(),
+        fields: z.array(
+          z.object({
+            label: z.string(),
+            placeholder: z.string().optional(),
+            type: z.string(),
+            options: z
+              .array(
+                z.object({
+                  key: z.any(),
+                  value: z.any(),
+                }),
+              )
+              .optional(),
+            required: z.boolean().optional(),
+          }),
+        ),
       }),
     },
     preHandler: [verifyJWT],
