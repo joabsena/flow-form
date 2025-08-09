@@ -9,12 +9,13 @@ import {
   jsonSchemaTransform,
   serializerCompiler,
   validatorCompiler,
+  ZodTypeProvider,
 } from 'fastify-type-provider-zod'
 import { formsRouter } from '@modules/form/router/router'
 import { usersRouter } from '@modules/user/router/router'
 import { env } from '../env'
 
-export const app = fastify()
+export const app = fastify().withTypeProvider<ZodTypeProvider>()
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,

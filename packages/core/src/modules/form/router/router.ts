@@ -1,5 +1,4 @@
 import { FastifyInstance } from 'fastify'
-import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { register } from '../controllers/register'
 import z from 'zod'
 import { verifyJWT } from 'src/shared/middlewares/verify-jwt'
@@ -8,7 +7,7 @@ import { deleteForm } from '../controllers/delete'
 import { getForms } from '../controllers/get-forms'
 
 export const formsRouter = (app: FastifyInstance) => {
-  app.withTypeProvider<ZodTypeProvider>().post('/forms', {
+  app.post('/forms', {
     schema: {
       description: 'Register a new form',
       tags: [SwaggerTags.FORMS],
@@ -38,7 +37,7 @@ export const formsRouter = (app: FastifyInstance) => {
     handler: register,
   })
 
-  app.withTypeProvider<ZodTypeProvider>().get('/forms', {
+  app.get('/forms', {
     schema: {
       description: 'Get all forms for the authenticated user',
       tags: [SwaggerTags.FORMS],
@@ -47,7 +46,7 @@ export const formsRouter = (app: FastifyInstance) => {
     handler: getForms,
   })
 
-  app.withTypeProvider<ZodTypeProvider>().delete('/forms/:formId', {
+  app.delete('/forms/:formId', {
     schema: {
       description: 'Delete a form by ID',
       tags: [SwaggerTags.FORMS],

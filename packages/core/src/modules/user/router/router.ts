@@ -1,14 +1,14 @@
 import { FastifyInstance } from 'fastify'
 import { register } from '../controllers/register'
-import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import z from 'zod'
 import { authenticate } from '../controllers/authenticate'
 import { SwaggerTags } from 'src/shared/types/swagger-tags'
 import { refresh } from '../controllers/refresh'
 
 export async function usersRouter(app: FastifyInstance) {
-  app.withTypeProvider<ZodTypeProvider>().post('/users', {
+  app.post('/users', {
     schema: {
+      description: 'Register a new user',
       tags: [SwaggerTags.AUTHENTICATION],
       body: z.object({
         name: z.string(),
@@ -31,8 +31,9 @@ export async function usersRouter(app: FastifyInstance) {
     handler: register,
   })
 
-  app.withTypeProvider<ZodTypeProvider>().post('/sessions', {
+  app.post('/sessions', {
     schema: {
+      description: 'Authenticate user and return JWT token',
       tags: [SwaggerTags.AUTHENTICATION],
       body: z.object({
         email: z.string().email(),
@@ -50,8 +51,9 @@ export async function usersRouter(app: FastifyInstance) {
     handler: authenticate,
   })
 
-  app.withTypeProvider<ZodTypeProvider>().patch('/refresh', {
+  app.patch('/refresh', {
     schema: {
+      description: 'Refresh JWT token',
       tags: [SwaggerTags.AUTHENTICATION],
       response: {
         200: z.object({
